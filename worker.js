@@ -5,7 +5,7 @@ const { spawn } = require("child_process");
 
 const REDIS_URL = process.env.REDISCLOUD_URL || "redis://127.0.0.1:6379";
 const workers = process.env.WEB_CONCURRENCY || 1;
-const maxJobsPerWorker = 20;
+const maxJobsPerWorker = 10;
 
 const start = () => {
   const workQueue = new Queue("testStream", REDIS_URL);
@@ -18,36 +18,28 @@ const start = () => {
 
     job.progress("running");
 
-    const stream = spawn("ffmpeg", [
-      "-re",
-      "-i",
-      "puppy_timer.mp4",
-      "-c",
-      "copy",
-      "-f",
-      "flv",
-      RTMP_INGEST,
-    ])
-      .on("error", (e) => {
-        console.log("error", e);
-        job.progress("error");
-        process.exit(1);
-      })
-      .on("close", () => {
-        console.log("Job completed");
-        job.progress("complete");
-        process.exit(0);
-      });
-
-    stream.stdout.on("data", (data) => {
-      console.log(`stdout: ${data}`);
+    return await new Promise((resolve, reject) => {
+      spawn("ffmpeg", [
+        "-re",
+        "-i",
+        "video.mp4",
+        "-c",
+        "copy",
+        "-f",
+        "flv",
+        RTMP_INGEST,
+      ])
+        .on("error", (e) => {
+          console.log("error", e);
+          job.progress("error");
+          reject("error");
+        })
+        .on("close", () => {
+          console.log("Job completed");
+          job.progress("complete");
+          resolve("complete");
+        });
     });
-
-    stream.stderr.on("data", (data) => {
-      console.error(`stderr: ${data}`);
-    });
-
-    return true;
   });
 };
 
