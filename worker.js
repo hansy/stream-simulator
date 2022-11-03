@@ -17,7 +17,7 @@ const start = () => {
 
     job.progress("running");
     exec(
-      `ffmpeg -re -i video.mp4 -c:v libx264 -preset veryfast -b:v 3000k -maxrate 3000k -bufsize 6000k -g 50 -c:a aac -b:a 160k -ac 2 -ar 44100 -f flv ${RTMP_INGEST}`,
+      `ffmpeg -re -i puppy_timer.mp4 -c:v libx264 -preset veryfast -b:v 3000k -maxrate 3000k -bufsize 6000k -g 50 -c:a aac -b:a 160k -ac 2 -ar 44100 -f flv ${RTMP_INGEST}`,
       async (error, stdout, stderr) => {
         if (error) {
           console.log("Job error", error);
