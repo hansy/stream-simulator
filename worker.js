@@ -63,7 +63,7 @@ const start = () => {
       console.error(`stderr: ${data}`);
     });
 
-    return true;
+    // return true;
   });
 };
 
