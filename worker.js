@@ -12,6 +12,9 @@ const start = () => {
   workQueue.process(maxJobsPerWorker, async (job) => {
     const { streamKey } = job.data;
     const RTMP_INGEST = `rtmp://rtmp.livepeer.com/live/${streamKey}`;
+
+    console.log("Starting worker with stream key", streamKey);
+
     job.progress("running");
     const stream = spawn("ffmpeg", [
       "-re",
