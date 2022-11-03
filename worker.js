@@ -1,6 +1,6 @@
 const throng = require("throng");
 const Queue = require("bull");
-const { spawn, exec } = require("child_process");
+const { spawnSync, exec } = require("child_process");
 
 const REDIS_URL = process.env.REDISCLOUD_URL || "redis://127.0.0.1:6379";
 const workers = process.env.WEB_CONCURRENCY || 1;
@@ -16,50 +16,51 @@ const start = () => {
     console.log("Starting worker with stream key", streamKey);
 
     job.progress("running");
-    exec(
-      `ffmpeg -re -i puppy_timer.mp4 -c:v libx264 -preset veryfast -b:v 3000k -maxrate 3000k -bufsize 6000k -g 50 -c:a aac -b:a 160k -ac 2 -ar 44100 -f flv ${RTMP_INGEST}`,
-      (error, stdout, stderr) => {
-        console.log(`stdout: ${stdout}`);
-        console.log(`stderr: ${stderr}`);
-        if (error) {
-          console.log("Job error", error);
-          job.progress("error");
-          process.exit(1);
-        } else {
-          console.log("Job completed");
-          job.progress("complete");
-          process.exit(0);
-        }
-      }
-    );
-    // const stream = spawn("ffmpeg", [
-    //   "-re",
-    //   "-i",
-    //   "puppy_timer.mp4",
-    //   "-c:v",
-    //   "libx264",
-    //   "-preset",
-    //   "veryfast",
-    //   "-b:v",
-    //   "3000k",
-    //   "-maxrate",
-    //   "3000k",
-    //   "-bufsize",
-    //   "6000k",
-    //   "-g",
-    //   "50",
-    //   "-c:a",
-    //   "aac",
-    //   "-b:a",
-    //   "160k",
-    //   "-ac",
-    //   "2",
-    //   "-ar",
-    //   "44100",
-    //   "-f",
-    //   "flv",
-    //   RTMP_INGEST,
-    // ], )
+    // exec(
+    //   `ffmpeg -re -i puppy_timer.mp4 -c:v libx264 -preset veryfast -b:v 3000k -maxrate 3000k -bufsize 6000k -g 50 -c:a aac -b:a 160k -ac 2 -ar 44100 -f flv ${RTMP_INGEST}`,
+    //   (error, stdout, stderr) => {
+    //     console.log(`stdout: ${stdout}`);
+    //     console.log(`stderr: ${stderr}`);
+    //     if (error) {
+    //       console.log("Job error", error);
+    //       job.progress("error");
+    //       process.exit(1);
+    //     } else {
+    //       console.log("Job completed");
+    //       job.progress("complete");
+    //       process.exit(0);
+    //     }
+    //   }
+    // );
+    const stream = spawnSync("ffmpeg", [
+      "-re",
+      "-i",
+      "puppy_timer.mp4",
+      "-c:v",
+      "libx264",
+      "-preset",
+      "veryfast",
+      "-b:v",
+      "3000k",
+      "-maxrate",
+      "3000k",
+      "-bufsize",
+      "6000k",
+      "-g",
+      "50",
+      "-c:a",
+      "aac",
+      "-b:a",
+      "160k",
+      "-ac",
+      "2",
+      "-ar",
+      "44100",
+      "-f",
+      "flv",
+      RTMP_INGEST,
+    ]);
+    job.progress("complete");
     //   .on("error", (e) => {
     //     console.log("error", e);
     //     job.progress("error");
