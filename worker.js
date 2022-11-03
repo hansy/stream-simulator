@@ -22,7 +22,7 @@ const start = () => {
       spawn("ffmpeg", [
         "-re",
         "-i",
-        "video.mp4",
+        "puppy_timer.mp4",
         "-c",
         "copy",
         "-f",
