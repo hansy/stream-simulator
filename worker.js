@@ -3,6 +3,7 @@ const throng = require("throng");
 const Queue = require("bull");
 const ffmpeg = require("fluent-ffmpeg");
 const { spawnSync, exec } = require("child_process");
+const e = require("express");
 
 const REDIS_URL = process.env.REDISCLOUD_URL || "redis://127.0.0.1:6379";
 const workers = process.env.WEB_CONCURRENCY || 1;
@@ -51,10 +52,19 @@ const start = () => {
       .on("end", () => {
         console.log("ended");
         job.progress("complete");
+        process.exit(0);
       })
       .on("error", (err, stdout, stderr) => {
-        console.log("error", err, stdout, stderr);
-        job.progress("error");
+        const message = err.message;
+
+        if (message.includes("Input/output error")) {
+          job.progress("bad key");
+        } else {
+          job.progress("error");
+          process.exit(1);
+        }
+
+        process.exit(0);
       });
 
     // const stream = spawnSync("ffmpeg", [

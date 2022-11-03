@@ -19,6 +19,10 @@ app.post("/stream", async (req, res) => {
   if (job) {
     const progress = job._progress;
 
+    if (progress === "bad key") {
+      return res.json({ status: "bad key" });
+    }
+
     if (progress !== "running") {
       console.log("Old job found; removing...");
       await job.remove();

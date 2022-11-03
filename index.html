@@ -8,8 +8,42 @@
   </head>
   <body>
     <main>
-      <h1>Hello World</h1>
+      <div>
+        <form id="form">
+          <p>Add Stream key here to start test stream</p>
+          <input id="streamKeyInput" type="text" />
+          <button>Submit</button>
+          <p id="status"></p>
+        </form>
+      </div>
     </main>
-    <script></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.1.min.js"
+      integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      $(document).ready(function () {
+        const formEl = $("#form");
+
+        formEl.on("submit", (e) => {
+          e.preventDefault();
+          const streamKey = $("#streamKeyInput").val();
+
+          $.ajax({
+            method: "POST",
+            url: `${window.location}stream`,
+            data: JSON.stringify({ streamKey }),
+            contentType: "application/json",
+            complete: (res) => {
+              const { status } = res.responseJSON;
+              const statusEl = $("#status");
+
+              statusEl.html(`Stream status: ${status}`);
+            },
+          });
+        });
+      });
+    </script>
   </body>
 </html>
