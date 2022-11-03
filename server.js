@@ -24,8 +24,7 @@ app.post("/stream", async (req, res) => {
       await job.remove();
     } else {
       console.log("Job already running");
-      await job.remove();
-      // return res.json({ status: "running" });
+      return res.json({ status: "running" });
     }
   }
 
