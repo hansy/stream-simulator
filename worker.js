@@ -54,9 +54,8 @@ const start = () => {
       })
       .on("error", (err, stdout, stderr) => {
         console.log("error", err, stdout, stderr);
+        job.progress("error");
       });
-
-    console.log("hello world");
 
     // const stream = spawnSync("ffmpeg", [
     //   "-re",
