@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const Queue = require("bull");
 const bodyParser = require("body-parser");
@@ -23,7 +24,8 @@ app.post("/stream", async (req, res) => {
       await job.remove();
     } else {
       console.log("Job already running");
-      return res.json({ status: "running" });
+      await job.remove();
+      // return res.json({ status: "running" });
     }
   }
 
