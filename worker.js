@@ -1,4 +1,3 @@
-if (process.env.NODE_ENV !== "production") require("dotenv").config();
 const throng = require("throng");
 const Queue = require("bull");
 const { spawn } = require("child_process");
