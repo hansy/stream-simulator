@@ -2,6 +2,9 @@
   "name": "test-stream",
   "version": "1.0.0",
   "main": "index.js",
+  "scripts": {
+    "start": "nodex index.js"
+  },
   "dependencies": {
     "body-parser": "^1.20.1",
     "bull": "^4.10.1",
