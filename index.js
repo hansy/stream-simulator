@@ -12,7 +12,7 @@ const workQueue = new Queue("testStream", REDIS_URL);
 
 app.get("/", (req, res) => res.sendFile("index.html", { root: __dirname }));
 
-app.post("/job", async (req, res) => {
+app.post("/stream", async (req, res) => {
   const { streamKey } = req.body;
   const job = await workQueue.getJob(streamKey);
 
