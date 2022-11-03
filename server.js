@@ -1,6 +1,9 @@
 require("dotenv").config();
 const express = require("express");
 const Queue = require("bull");
+const { createBullBoard } = require("@bull-board/api");
+const { BullAdapter } = require("@bull-board/api/bullAdapter");
+const { ExpressAdapter } = require("@bull-board/express");
 const bodyParser = require("body-parser");
 
 const PORT = process.env.PORT || "5000";
@@ -9,6 +12,16 @@ const REDIS_URL = process.env.REDISCLOUD_URL || "redis://127.0.0.1:6379";
 const app = express();
 app.use(bodyParser.json());
 const workQueue = new Queue("testStream", REDIS_URL);
+const serverAdapter = new ExpressAdapter();
+
+serverAdapter.setBasePath("/admin/queues");
+
+createBullBoard({
+  queues: [new BullAdapter(workQueue)],
+  serverAdapter: serverAdapter,
+});
+
+app.use("/admin/queues", serverAdapter.getRouter());
 
 app.get("/", (req, res) => res.sendFile("index.html", { root: __dirname }));
 
