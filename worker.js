@@ -44,11 +44,13 @@ const start = () => {
       "flv",
       RTMP_INGEST,
     ])
-      .on("error", () => {
+      .on("error", (e) => {
+        console.log("error", e);
         job.progress("error");
         process.exit(1);
       })
       .on("close", () => {
+        console.log("Job completed");
         job.progress("complete");
         process.exit(0);
       });
