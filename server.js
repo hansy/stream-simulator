@@ -19,12 +19,15 @@ app.post("/stream", async (req, res) => {
     const progress = job._progress;
 
     if (progress !== "running") {
+      console.log("Old job found; removing...");
       await job.remove();
     } else {
+      console.log("Job already running");
       return res.json({ status: "running" });
     }
   }
 
+  console.log("Adding new job to queue");
   await workQueue.add({ streamKey }, { jobId: streamKey });
 
   res.json({ status: "started" });
