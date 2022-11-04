@@ -1,49 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Test Stream</title>
+    <link rel="stylesheet" href="/pico.min.css" />
+    <link rel="stylesheet" href="/styles.css" />
+    <title>Test Stream Creator | Livepeer</title>
   </head>
   <body>
-    <main>
-      <div>
-        <form id="form">
-          <p>Add Stream key here to start test stream</p>
-          <input id="streamKeyInput" type="text" />
+    <nav class="container">
+      <ul>
+        <li><strong>Test Stream Creator</strong></li>
+      </ul>
+      <ul>
+        <li><a href="https://docs.livepeer.studio/" target="_blank" rel="noopener">Livepeer Docs</a></li>
+        <li><a href="https://livepeer.studio/dashboard" target="_blank" rel="noopener">Studio Dashboard</a></li>
+        <li><a href="https://livepeerjs.org/" target="_blank" rel="noopener">Livepeer JS</a></li>
+      </ul>
+    </nav>
+    <main class="container">
+      <hgroup class="text-center">
+        <h1>Testing a livestream, but the WIFI sucks?</h1>
+        <h2>Don't worry. We got you.</h2>
+      </hgroup>
+      <div class="mx-auto w-lg">
+        <p>
+          Below is a way to simulate a livestream to your application without
+          having to run OBS or some other broadcasting software yourself.
+        </p>
+        <p>
+          Just enter your <kbd>Stream Key</kbd> below to trigger a 10-minute
+          livestream to your RTMP ingest endpoint. You can see the stream in the
+          <a href="https://livepeer.studio/dashboard" target="_blank" rel="noopener">Studio Dashboard</a> or
+          through the <a href="https://livepeerjs.org/" target="_blank" rel="noopener">Livepeer Player</a> in
+          your app.
+        </p>
+        <p>Happy Hacking!</p>
+        <form id="form"">
+          <input id="streamKeyInput" type="text" placeholder="Stream Key" />
           <button>Submit</button>
-          <p id="status"></p>
+          <small id="status" class="block text-center"></small>
         </form>
+        
       </div>
+      
     </main>
-    <script
-      src="https://code.jquery.com/jquery-3.6.1.min.js"
-      integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
-      crossorigin="anonymous"
-    ></script>
-    <script>
-      $(document).ready(function () {
-        const formEl = $("#form");
-
-        formEl.on("submit", (e) => {
-          e.preventDefault();
-          const streamKey = $("#streamKeyInput").val();
-
-          $.ajax({
-            method: "POST",
-            url: `${window.location}stream`,
-            data: JSON.stringify({ streamKey }),
-            contentType: "application/json",
-            complete: (res) => {
-              const { status } = res.responseJSON;
-              const statusEl = $("#status");
-
-              statusEl.html(`Stream status: ${status}`);
-            },
-          });
-        });
-      });
-    </script>
+    <script src="/jquery.min.js"></script>
+    <script src="/scripts.js"></script>
   </body>
 </html>

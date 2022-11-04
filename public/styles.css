@@ -1,0 +1,16 @@
+.text-center {
+  text-align: center;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.w-lg {
+  max-width: 700px;
+}
+
+.block {
+  display: block;
+}
