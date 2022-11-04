@@ -1,7 +1,7 @@
 require("dotenv").config();
 const throng = require("throng");
 const Queue = require("bull");
-const { spawn } = require("child_process");
+const { spawnSync } = require("child_process");
 
 const REDIS_URL = process.env.REDISCLOUD_URL || "redis://127.0.0.1:6379";
 const workers = process.env.WEB_CONCURRENCY || 1;
@@ -18,28 +18,31 @@ const start = () => {
 
     job.progress("running");
 
-    return await new Promise((resolve, reject) => {
-      spawn("ffmpeg", [
-        "-re",
-        "-i",
-        "puppy_timer.mp4",
-        "-c",
-        "copy",
-        "-f",
-        "flv",
-        RTMP_INGEST,
-      ])
-        .on("error", (e) => {
-          console.log("error", e);
-          job.progress("error");
-          reject("error");
-        })
-        .on("close", () => {
-          console.log("Job completed");
-          job.progress("complete");
-          resolve("complete");
-        });
-    });
+    // return await new Promise((resolve, reject) => {
+    spawnSync("ffmpeg", [
+      "-re",
+      "-i",
+      "puppy_timer.mp4",
+      "-c",
+      "copy",
+      "-f",
+      "flv",
+      RTMP_INGEST,
+    ]);
+    console.log("Completed Job");
+    job.progress("complete");
+    process.exit(0);
+    // .on("error", (e) => {
+    //   console.log("error", e);
+    //   job.progress("error");
+    //   reject("error");
+    // })
+    // .on("close", () => {
+    //   console.log("Job completed");
+    //   job.progress("complete");
+    //   resolve("complete");
+    // });
+    // });
   });
 };
 
