@@ -14,7 +14,7 @@ const start = () => {
     const { streamKey } = job.data;
     const RTMP_INGEST = `rtmp://rtmp.livepeer.com/live/${streamKey}`;
 
-    console.log("Starting worker with stream key", streamKey);
+    console.log("Starting stream", streamKey);
 
     job.progress("running");
 

@@ -28,7 +28,7 @@ const spawnFFMPEGStream = (streamKey) => {
   console.log("Starting worker with stream key", streamKey);
   const RTMP_INGEST = `rtmp://rtmp.livepeer.com/live/${streamKey}`;
 
-  spawn("ffmpeg", [
+  const stream = spawn("ffmpeg", [
     "-re",
     "-i",
     "puppy_timer.mp4",
@@ -46,6 +46,14 @@ const spawnFFMPEGStream = (streamKey) => {
       console.log(`Stream (${streamKey}) complete`);
       RUNNING_STREAMS[streamKey] = "complete";
     });
+
+  stream.stdout.on("data", (data) => {
+    console.log(`stdout: ${data}`);
+  });
+
+  stream.stderr.on("data", (data) => {
+    console.error(`stderr: ${data}`);
+  });
 };
 
 app.use("/admin/queues", serverAdapter.getRouter());
