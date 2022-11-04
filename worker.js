@@ -1,7 +1,7 @@
 require("dotenv").config();
 const throng = require("throng");
 const Queue = require("bull");
-const { spawnSync } = require("child_process");
+const { spawn } = require("child_process");
 
 const REDIS_URL = process.env.REDISCLOUD_URL || "redis://127.0.0.1:6379";
 const workers = process.env.WEB_CONCURRENCY || 1;
@@ -18,8 +18,7 @@ const start = () => {
 
     job.progress("running");
 
-    // return await new Promise((resolve, reject) => {
-    spawnSync("ffmpeg", [
+    spawn("ffmpeg", [
       "-re",
       "-i",
       "puppy_timer.mp4",
@@ -28,21 +27,17 @@ const start = () => {
       "-f",
       "flv",
       RTMP_INGEST,
-    ]);
-    console.log("Completed Job");
-    job.progress("complete");
-    process.exit(0);
-    // .on("error", (e) => {
-    //   console.log("error", e);
-    //   job.progress("error");
-    //   reject("error");
-    // })
-    // .on("close", () => {
-    //   console.log("Job completed");
-    //   job.progress("complete");
-    //   resolve("complete");
-    // });
-    // });
+    ])
+      .on("error", (e) => {
+        console.log("error", e);
+        job.progress("error");
+        process.exit(1);
+      })
+      .on("close", () => {
+        console.log("Job completed");
+        job.progress("complete");
+        process.exit(0);
+      });
   });
 };
 
